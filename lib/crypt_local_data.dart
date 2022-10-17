@@ -66,7 +66,7 @@ class CryptLocalData extends ICryptedLocalData {
   @override
   Future<String?> read({required String key}) async {
     if (Platform.isIOS) {
-      String localData = await FlutterKeychain.get(key: key) ?? "";
+      String? localData = await FlutterKeychain.get(key: key);
 
       return localData;
     } else {
@@ -78,6 +78,7 @@ class CryptLocalData extends ICryptedLocalData {
         Encrypted encryptedValue = Encrypted.from64(localValue);
 
         final encrypter = Encrypter(AES(Key.fromUtf8(dotenv.env["privateKey"] ?? "")));
+
         final String decrypted = encrypter.decrypt(encryptedValue, iv: IV.fromUtf8(utf8.decode((dotenv.env["privateINV"] ?? '').codeUnits)));
 
         return decrypted;
